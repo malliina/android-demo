@@ -2,6 +2,9 @@ package com.malliina.demo
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.math.max
 
@@ -16,13 +19,16 @@ class DemoPagingSource : PagingSource<LimitOffset, Message>() {
   }
 
   override suspend fun load(params: LoadParams<LimitOffset>): LoadResult<LimitOffset, Message> {
-    Timber.i("Loading ${params.key} load size ${params.loadSize}")
-    val limits = params.key ?: LimitOffset(params.loadSize, 0)
-    val items = SampleData.messages.drop(limits.offset).take(limits.limit)
-    return LoadResult.Page(
-      items,
-      if (limits.offset > 0) LimitOffset(20, max(limits.offset - 20, 0)) else null,
-      if (items.isEmpty()) null else LimitOffset(limits.limit, offset = limits.offset + 20)
-    )
+    return withContext(Dispatchers.IO) {
+      Timber.i("Loading ${params.key} load size ${params.loadSize}")
+      val limits = params.key ?: LimitOffset(params.loadSize, 0)
+      val items = SampleData.messages.drop(limits.offset).take(limits.limit)
+      delay(2000)
+      LoadResult.Page(
+        items,
+        if (limits.offset > 0) LimitOffset(limits.limit, max(limits.offset - limits.limit, 0)) else null,
+        if (items.isEmpty()) null else LimitOffset(limits.limit, offset = limits.offset + limits.limit)
+      )
+    }
   }
 }
