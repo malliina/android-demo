@@ -10,12 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.malliina.demo.ui.theme.DemoAppTheme
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = rememberNavController()) {
   DemoAppTheme {
     val currentStack = navController.currentBackStackEntryAsState()
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     Scaffold(
+      scaffoldState = scaffoldState,
       topBar = {
         if (currentStack.value?.destination?.route == Nav.Main) {
           TopAppBar(title = { Text("Demo app") })
@@ -34,8 +39,21 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
         }
       }) {
       NavHost(navController = navController, startDestination = Nav.Main) {
-        composable(Nav.Main) { ConversationPage(viewModel.flow, navController) }
-        composable(Nav.Message) { MessageDetails(navController) }
+        composable(Nav.Main) {
+          ConversationPage(viewModel.flow, navController) {
+            scope.launch {
+              scaffoldState.snackbarHostState.showSnackbar("An error occurred.", "OK")
+            }
+          }
+        }
+        composable(Nav.Message) {
+          MessageDetails(navController) {
+            Timber.i("Clicked")
+            scope.launch {
+              scaffoldState.snackbarHostState.showSnackbar("Snackbar message", "OK")
+            }
+          }
+        }
         composable(Nav.Second) { SecondPage(navController) }
       }
     }

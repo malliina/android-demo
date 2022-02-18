@@ -22,16 +22,18 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
-fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostController) {
+fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostController, onError: () -> Unit) {
   // A surface container using the 'background' color from the theme
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
     Column {
       Button(onClick = { navController.navigate(Nav.Second) }, Modifier.fillMaxWidth()) {
         Text("Go")
       }
-      Conversation(flow, navController)
+      Conversation(flow, navController, onError)
     }
   }
 }
@@ -39,10 +41,13 @@ fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostCont
 data class Message(val author: String, val body: String)
 
 @Composable
-fun Conversation(flow: Flow<PagingData<Message>>, navController: NavHostController) {
+fun Conversation(flow: Flow<PagingData<Message>>, navController: NavHostController, onError: () -> Unit) {
   val lazyMessages = flow.collectAsLazyPagingItems()
-
   LazyColumn {
+    if (lazyMessages.loadState.append is LoadState.Error) {
+      Timber.i("Erroring...")
+      onError()
+    }
     if (lazyMessages.loadState.refresh == LoadState.Loading) {
       item {
         Column(
