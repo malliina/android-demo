@@ -41,7 +41,7 @@ fun ConversationPage(
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
     Column {
       Button(onClick = { lazyMessages.refresh() }, Modifier.fillMaxWidth()) {
-        Text("Refresh")
+        Text("Tap or swipe to refresh")
       }
       SwipeConversation(lazyMessages, navController)
     }
@@ -53,10 +53,9 @@ data class Message(val author: String, val body: String)
 @Composable
 fun SwipeConversation(lazyMessages: LazyPagingItems<Message>,
                       navController: NavHostController) {
-  val isRefreshing = MutableStateFlow(false)
-  val isRefreshingState = isRefreshing.asStateFlow().collectAsState()
+  var isRefreshing by remember { mutableStateOf(false) }
   SwipeRefresh(
-    state = rememberSwipeRefreshState(isRefreshing = isRefreshingState.value),
+    state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
     onRefresh = { lazyMessages.refresh() }
   ) {
     Conversation(lazyMessages, navController) {
