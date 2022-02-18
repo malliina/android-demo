@@ -24,14 +24,14 @@ import androidx.paging.compose.items
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun FirstPage(flow: Flow<PagingData<Message>>, navController: NavHostController) {
+fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostController) {
   // A surface container using the 'background' color from the theme
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
     Column {
-      Button(onClick = { navController.navigate(Nav.Detail) }, Modifier.fillMaxWidth()) {
+      Button(onClick = { navController.navigate(Nav.Second) }, Modifier.fillMaxWidth()) {
         Text("Go")
       }
-      Conversation(flow)
+      Conversation(flow, navController)
     }
   }
 }
@@ -39,7 +39,42 @@ fun FirstPage(flow: Flow<PagingData<Message>>, navController: NavHostController)
 data class Message(val author: String, val body: String)
 
 @Composable
-fun MessageCard(msg: Message) {
+fun Conversation(flow: Flow<PagingData<Message>>, navController: NavHostController) {
+  val lazyMessages = flow.collectAsLazyPagingItems()
+
+  LazyColumn {
+    if (lazyMessages.loadState.refresh == LoadState.Loading) {
+      item {
+        Column(
+          modifier = Modifier.fillParentMaxSize(),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+          CircularProgressIndicator()
+        }
+      }
+    }
+    items(lazyMessages) { message ->
+      message?.let { msg ->
+        MessageCard(msg) {
+          navController.navigate(Nav.Message)
+        }
+      }
+    }
+    if (lazyMessages.loadState.append == LoadState.Loading) {
+      item {
+        CircularProgressIndicator(
+          modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+        )
+      }
+    }
+  }
+}
+
+@Composable
+fun MessageCard(msg: Message, onClick: () -> Unit) {
   Row(modifier = Modifier.padding(all = 8.dp)) {
     Image(
       painter = painterResource(R.drawable.kopp_small),
@@ -54,7 +89,7 @@ fun MessageCard(msg: Message) {
     val surfaceColor: Color by animateColorAsState(
       if (isExpanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
     )
-    Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
+    Column(modifier = Modifier.clickable { onClick() }) {
       Text(
         text = msg.author,
         color = MaterialTheme.colors.secondaryVariant,
@@ -74,39 +109,6 @@ fun MessageCard(msg: Message) {
           modifier = Modifier.padding(all = 4.dp),
           maxLines = if (isExpanded) Int.MAX_VALUE else 1,
           style = MaterialTheme.typography.body2
-        )
-      }
-    }
-  }
-}
-
-@Composable
-fun Conversation(flow: Flow<PagingData<Message>>) {
-  val lazyMessages = flow.collectAsLazyPagingItems()
-
-  LazyColumn {
-    if (lazyMessages.loadState.refresh == LoadState.Loading) {
-      item {
-        Column(
-          modifier = Modifier.fillParentMaxSize(),
-          verticalArrangement = Arrangement.Center,
-          horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          CircularProgressIndicator()
-        }
-      }
-    }
-    items(lazyMessages) { message ->
-      message?.let { msg ->
-        MessageCard(msg)
-      }
-    }
-    if (lazyMessages.loadState.append == LoadState.Loading) {
-      item {
-        CircularProgressIndicator(
-          modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.CenterHorizontally)
         )
       }
     }

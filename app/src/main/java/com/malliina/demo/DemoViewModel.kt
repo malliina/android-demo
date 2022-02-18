@@ -7,7 +7,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 
 class DemoViewModel: ViewModel() {
-  val pager: Pager<LimitOffset, Message> = Pager(
+  private val pager: Pager<LimitOffset, Message> = Pager(
     PagingConfig(pageSize = 20, enablePlaceholders = true, maxSize = 200)
   ) {
     DemoPagingSource()
