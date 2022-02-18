@@ -15,25 +15,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.malliina.demo.ui.theme.DemoAppTheme
+import kotlinx.coroutines.flow.*
 import timber.log.Timber
 
 @Composable
-fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostController, onError: () -> Unit) {
+fun ConversationPage(
+  flow: Flow<PagingData<Message>>,
+  navController: NavHostController,
+  onError: () -> Unit
+) {
+  val lazyMessages = flow.collectAsLazyPagingItems()
   // A surface container using the 'background' color from the theme
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
     Column {
-      Button(onClick = { navController.navigate(Nav.Second) }, Modifier.fillMaxWidth()) {
-        Text("Go")
+      Button(onClick = { lazyMessages.refresh() }, Modifier.fillMaxWidth()) {
+        Text("Refresh")
       }
-      Conversation(flow, navController, onError)
+      SwipeConversation(lazyMessages, navController)
     }
   }
 }
@@ -41,13 +51,32 @@ fun ConversationPage(flow: Flow<PagingData<Message>>, navController: NavHostCont
 data class Message(val author: String, val body: String)
 
 @Composable
-fun Conversation(flow: Flow<PagingData<Message>>, navController: NavHostController, onError: () -> Unit) {
-  val lazyMessages = flow.collectAsLazyPagingItems()
-  LazyColumn {
-    if (lazyMessages.loadState.append is LoadState.Error) {
-      Timber.i("Erroring...")
-      onError()
+fun SwipeConversation(lazyMessages: LazyPagingItems<Message>,
+                      navController: NavHostController) {
+  val isRefreshing = MutableStateFlow(false)
+  val isRefreshingState = isRefreshing.asStateFlow().collectAsState()
+  SwipeRefresh(
+    state = rememberSwipeRefreshState(isRefreshing = isRefreshingState.value),
+    onRefresh = { lazyMessages.refresh() }
+  ) {
+    Conversation(lazyMessages, navController) {
+
     }
+  }
+}
+
+@Composable
+fun Conversation(
+  lazyMessages: LazyPagingItems<Message>,
+  navController: NavHostController,
+  onError: () -> Unit
+) {
+//  val lazyMessages = flow.collectAsLazyPagingItems()
+  LazyColumn {
+//    if (lazyMessages.loadState.append is LoadState.Error) {
+//      Timber.i("Erroring...")
+//      onError()
+//    }
     if (lazyMessages.loadState.refresh == LoadState.Loading) {
       item {
         Column(
@@ -116,6 +145,16 @@ fun MessageCard(msg: Message, onClick: () -> Unit) {
           style = MaterialTheme.typography.body2
         )
       }
+    }
+  }
+}
+
+@Preview
+@Composable
+fun MessageCardPreview() {
+  DemoAppTheme {
+    MessageCard(msg = Message("Michael", "Hello, you!")) {
+
     }
   }
 }

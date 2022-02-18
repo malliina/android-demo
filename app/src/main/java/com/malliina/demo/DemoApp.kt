@@ -54,7 +54,7 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
             }
           }
         }
-        composable(Nav.Second) { SecondPage(navController) }
+//        composable(Nav.Second) { SecondPage(navController) }
       }
     }
   }
@@ -67,7 +67,7 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
 //    Conversation(SampleData.pager.flow)
 //  }
 //}
-//
+
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = false, name = "Dark Mode")
 //@Composable
 //fun DarkModePreview() {

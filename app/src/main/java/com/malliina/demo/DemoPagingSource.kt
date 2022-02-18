@@ -32,15 +32,20 @@ class DemoPagingSource : PagingSource<LimitOffset, Message>() {
       val limits = params.key ?: LimitOffset(params.loadSize, 0)
       val items = SampleData.messages.drop(limits.offset).take(limits.limit)
       delay(1000)
-      if (limits.offset == 0) {
-        LoadResult.Page(
-          items,
-          if (limits.offset > 0) LimitOffset(limits.limit, max(limits.offset - limits.limit, 0)) else null,
-          if (items.isEmpty()) null else LimitOffset(limits.limit, offset = limits.offset + limits.limit)
-        )
-      } else {
-        LoadResult.Error(Exception("Demo network error."))
-      }
+      LoadResult.Page(
+        items,
+        if (limits.offset > 0) LimitOffset(limits.limit, max(limits.offset - limits.limit, 0)) else null,
+        if (items.isEmpty()) null else LimitOffset(limits.limit, offset = limits.offset + limits.limit)
+      )
+//      if (limits.offset == 0) {
+//        LoadResult.Page(
+//          items,
+//          if (limits.offset > 0) LimitOffset(limits.limit, max(limits.offset - limits.limit, 0)) else null,
+//          if (items.isEmpty()) null else LimitOffset(limits.limit, offset = limits.offset + limits.limit)
+//        )
+//      } else {
+//        LoadResult.Error(Exception("Demo network error."))
+//      }
     }
   }
 }
