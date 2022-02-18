@@ -24,6 +24,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import androidx.paging.compose.itemsIndexed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.malliina.demo.ui.theme.DemoAppTheme
@@ -58,24 +59,16 @@ fun SwipeConversation(lazyMessages: LazyPagingItems<Message>,
     state = rememberSwipeRefreshState(isRefreshing = isRefreshing),
     onRefresh = { lazyMessages.refresh() }
   ) {
-    Conversation(lazyMessages, navController) {
-
-    }
+    Conversation(lazyMessages, navController)
   }
 }
 
 @Composable
 fun Conversation(
   lazyMessages: LazyPagingItems<Message>,
-  navController: NavHostController,
-  onError: () -> Unit
+  navController: NavHostController
 ) {
-//  val lazyMessages = flow.collectAsLazyPagingItems()
   LazyColumn {
-//    if (lazyMessages.loadState.append is LoadState.Error) {
-//      Timber.i("Erroring...")
-//      onError()
-//    }
     if (lazyMessages.loadState.refresh == LoadState.Loading) {
       item {
         Column(
@@ -87,10 +80,10 @@ fun Conversation(
         }
       }
     }
-    items(lazyMessages) { message ->
+    itemsIndexed(lazyMessages) { idx, message ->
       message?.let { msg ->
-        MessageCard(msg) {
-          navController.navigate(Nav.Message)
+        MessageCard(msg, big = false) {
+          navController.navigate(Nav.message("$idx"))
         }
       }
     }
@@ -107,7 +100,7 @@ fun Conversation(
 }
 
 @Composable
-fun MessageCard(msg: Message, onClick: () -> Unit) {
+fun MessageCard(msg: Message, big: Boolean, onClick: () -> Unit) {
   Row(modifier = Modifier.padding(all = 8.dp)) {
     Image(
       painter = painterResource(R.drawable.kopp_small),
@@ -140,7 +133,7 @@ fun MessageCard(msg: Message, onClick: () -> Unit) {
         Text(
           text = msg.body,
           modifier = Modifier.padding(all = 4.dp),
-          maxLines = if (isExpanded) Int.MAX_VALUE else 1,
+          maxLines = if (big || isExpanded) Int.MAX_VALUE else 1,
           style = MaterialTheme.typography.body2
         )
       }
@@ -152,7 +145,7 @@ fun MessageCard(msg: Message, onClick: () -> Unit) {
 @Composable
 fun MessageCardPreview() {
   DemoAppTheme {
-    MessageCard(msg = Message("Michael", "Hello, you!")) {
+    MessageCard(msg = Message("Michael", "Hello, you!"), big = false) {
 
     }
   }

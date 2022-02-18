@@ -46,32 +46,19 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
             }
           }
         }
-        composable(Nav.Message) {
-          MessageDetails(navController) {
+        composable(Nav.MessageTemplate) { backStackEntry ->
+          MessageDetails(
+            navController,
+            viewModel,
+            backStackEntry.arguments?.getString(Nav.MessageParam) ?: ""
+          ) {
             Timber.i("Clicked")
             scope.launch {
               scaffoldState.snackbarHostState.showSnackbar("Snackbar message", "OK")
             }
           }
         }
-//        composable(Nav.Second) { SecondPage(navController) }
       }
     }
   }
 }
-
-//@Preview(showBackground = true, name = "Default Mode")
-//@Composable
-//fun DefaultPreview() {
-//  DemoAppTheme {
-//    Conversation(SampleData.pager.flow)
-//  }
-//}
-
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = false, name = "Dark Mode")
-//@Composable
-//fun DarkModePreview() {
-//  DemoAppTheme {
-//    Conversation(SampleData.pager.flow)
-//  }
-//}
