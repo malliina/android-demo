@@ -14,3 +14,4 @@
 .cxx
 local.properties
 fastlane/report.xml
+service_account_credential.json
