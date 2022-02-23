@@ -25,4 +25,4 @@ jobs:
         env:
           SERVICE_CREDENTIALS: ${{ secrets.SERVICE_CREDENTIALS }}
       - name: Beta
-        run: bundle exec fastlane beta
+        run: bundle exec fastlane apk

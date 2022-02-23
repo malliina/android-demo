@@ -22,9 +22,14 @@ platform :android do
   end
 
   desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :apk do
+    gradle(task: "clean assembleRelease")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     gradle(task: "clean assembleRelease")
-    crashlytics
+    upload_symbols_to_crashlytics
   
     # sh "your_script.sh"
     # You can also use other beta testing services here
