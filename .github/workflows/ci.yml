@@ -21,6 +21,8 @@ jobs:
           java-version: 11.0.2
       - name: Install bundler
         run: bundle install
+      - name: Run tests with bundler
+        run: bundle exec fastlane test
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:

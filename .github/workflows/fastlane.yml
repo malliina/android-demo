@@ -1,0 +1,26 @@
+name: Fastlane
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: macos-11
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11.0.2
+      - name: Install bundler
+        run: bundle install
+      - name: Run tests with bundler
+        run: bundle exec fastlane test
+      - name: Create Service Account Credential file
+        run: |
+          echo "$SERVICE_CREDENTIALS" > service_account_credential.json.b64
+          base64 -d -i service_account_credential.json.b64 > service_account_credential.json
+          bundle exec fastlane run validate_play_store_json_key json_key:service_account_credential.json
+        env:
+          SERVICE_CREDENTIALS: ${{ secrets.SERVICE_CREDENTIALS }}
