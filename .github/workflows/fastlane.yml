@@ -15,8 +15,8 @@ jobs:
           java-version: 11.0.2
       - name: Install bundler
         run: bundle install
-      - name: Run tests with bundler
-        run: bundle exec fastlane test
+#      - name: Run tests with bundler
+#        run: bundle exec fastlane test
       - name: Create Service Account Credential file
         run: |
           echo "$SERVICE_CREDENTIALS" > service_account_credential.json.b64
@@ -25,4 +25,4 @@ jobs:
         env:
           SERVICE_CREDENTIALS: ${{ secrets.SERVICE_CREDENTIALS }}
       - name: Beta
-        run: bundle exec fastlane beta
+        run: bundle exec fastlane distribute

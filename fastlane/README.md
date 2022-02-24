@@ -39,6 +39,14 @@ Submit a new Beta Build to Crashlytics Beta
 
 Submit a new Beta Build to Crashlytics Beta
 
+### android distribute
+
+```sh
+[bundle exec] fastlane android distribute
+```
+
+My awesome app
+
 ### android deploy
 
 ```sh
