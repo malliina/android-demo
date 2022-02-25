@@ -42,7 +42,7 @@ platform :android do
       app: "1:889363668693:android:aeeb692aed00c85e590c5c",
       testers: "malliina123@gmail.com",
       release_notes: "Lots of cool stuff!",
-      service_credentials_file: "androiddemo-service-account.json",
+      service_credentials_file: "service_account_credential.json",
       debug: true
     )
   end
