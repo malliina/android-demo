@@ -1,18 +1,3 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
 
 platform :android do
@@ -21,22 +6,13 @@ platform :android do
     gradle(task: "test")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
+  desc "Build APK"
   lane :apk do
     gradle(task: "clean assembleRelease")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    upload_symbols_to_crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
-
-  desc "My awesome app"
-  lane :distribute do
+  desc "Submit to internal testers"
+  lane :testers do
     gradle(task: "clean assembleRelease")
     firebase_app_distribution(
       app: "1:260406014740:android:2e10d68881c79724e98801",
@@ -44,6 +20,16 @@ platform :android do
       release_notes: "Lots of cool stuff!",
       service_credentials_file: "service_account_credential.json",
       debug: true
+    )
+  end
+
+  desc "Release beta"
+  lane :beta do
+    gradle(task: "bundle", build_type: "Release")
+    upload_to_play_store(
+#       track: "alpha"
+      track: "internal"
+#       release_status: "draft"
     )
   end
 

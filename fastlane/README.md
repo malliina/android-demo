@@ -29,7 +29,15 @@ Runs all the tests
 [bundle exec] fastlane android apk
 ```
 
-Submit a new Beta Build to Crashlytics Beta
+Build APK
+
+### android testers
+
+```sh
+[bundle exec] fastlane android testers
+```
+
+Submit to internal testers
 
 ### android beta
 
@@ -37,15 +45,7 @@ Submit a new Beta Build to Crashlytics Beta
 [bundle exec] fastlane android beta
 ```
 
-Submit a new Beta Build to Crashlytics Beta
-
-### android distribute
-
-```sh
-[bundle exec] fastlane android distribute
-```
-
-My awesome app
+Release beta
 
 ### android deploy
 
