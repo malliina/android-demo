@@ -39,7 +39,7 @@ platform :android do
   lane :distribute do
     gradle(task: "clean assembleRelease")
     firebase_app_distribution(
-      app: "1:889363668693:android:aeeb692aed00c85e590c5c",
+      app: "1:260406014740:android:2e10d68881c79724e98801",
       testers: "malliina123@gmail.com",
       release_notes: "Lots of cool stuff!",
       service_credentials_file: "service_account_credential.json",
