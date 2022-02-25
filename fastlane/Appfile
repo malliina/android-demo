@@ -1,2 +1,2 @@
-json_key_file("api-5686430908194124552-499799-ab0012b9a06f.json")
+json_key_file("service_account_credential.json")
 package_name("com.malliina.demo")
