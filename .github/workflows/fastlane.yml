@@ -25,4 +25,4 @@ jobs:
         env:
           SERVICE_CREDENTIALS: ${{ secrets.SERVICE_CREDENTIALS }}
       - name: Submit to testers
-        run: bundle exec fastlane testers
+        run: bundle exec fastlane beta
