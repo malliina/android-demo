@@ -31,7 +31,6 @@ class DemoPagingSource : PagingSource<LimitOffset, Message>() {
       Timber.i("Loading ${params.key} load size ${params.loadSize}")
       val limits = params.key ?: LimitOffset(params.loadSize, 0)
       val items = SampleData.messages.drop(limits.offset).take(limits.limit)
-      delay(1000)
       LoadResult.Page(
         items,
         if (limits.offset > 0) LimitOffset(limits.limit, max(limits.offset - limits.limit, 0)) else null,

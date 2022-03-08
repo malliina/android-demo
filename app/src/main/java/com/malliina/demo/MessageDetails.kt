@@ -25,7 +25,6 @@ fun MessageDetails(
 ) {
   var res: Res<Message> by remember { mutableStateOf(Res.Loading) }
   LaunchedEffect(messageId) {
-    delay(500)
     res = Res.Success(vm.loadMessage(messageId.toInt()))
   }
   Column {
@@ -35,6 +34,7 @@ fun MessageDetails(
       is Res.Success -> MessageCard(r.t, big = true) {
 
       }
+      else -> {}
     }
   }
 }

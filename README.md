@@ -13,7 +13,7 @@
 
 ## Releasing
 
-Before any app can be released (for testing or otherwise) manually using Fastlane, one release must
+Before any app can be released using Fastlane (for testing or otherwise), one release must
 be made manually.
 
 In the Google Play console, release an app using the Closed testing Alpha track manually. This

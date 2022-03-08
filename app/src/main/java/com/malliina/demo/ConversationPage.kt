@@ -18,31 +18,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.malliina.demo.ui.theme.DemoAppTheme
-import kotlinx.coroutines.flow.*
-import timber.log.Timber
 
 @Composable
 fun ConversationPage(
-  flow: Flow<PagingData<Message>>,
+  vm: DemoViewModel,
   navController: NavHostController,
+  lang: ConversationLang,
   onError: () -> Unit
 ) {
-  val lazyMessages = flow.collectAsLazyPagingItems()
+  val lazyMessages = vm.flow.collectAsLazyPagingItems()
+  var message: Res<Message> by remember { mutableStateOf(Res.Loading) }
+  LaunchedEffect("demo") {
+    message = Res.Success(vm.loadMessage(1))
+  }
   // A surface container using the 'background' color from the theme
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
     Column {
       Button(onClick = { lazyMessages.refresh() }, Modifier.fillMaxWidth()) {
-        Text("Tap or swipe to refresh")
+        Text(lang.tap)
+      }
+      when (val m = message) {
+        Res.Loading -> CircularProgressIndicator()
+        is Res.Success -> Text(lang.demo)
+        else -> {}
       }
       SwipeConversation(lazyMessages, navController)
     }
@@ -52,8 +57,10 @@ fun ConversationPage(
 data class Message(val author: String, val body: String)
 
 @Composable
-fun SwipeConversation(lazyMessages: LazyPagingItems<Message>,
-                      navController: NavHostController) {
+fun SwipeConversation(
+  lazyMessages: LazyPagingItems<Message>,
+  navController: NavHostController
+) {
   var isRefreshing by remember { mutableStateOf(false) }
   SwipeRefresh(
     state = rememberSwipeRefreshState(isRefreshing = isRefreshing),

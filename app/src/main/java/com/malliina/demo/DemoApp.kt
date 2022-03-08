@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
-fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = rememberNavController()) {
+fun DemoApp(viewModel: DemoViewModel, lang: Lang = Lang.english, navController: NavHostController = rememberNavController()) {
   DemoAppTheme {
     val currentStack = navController.currentBackStackEntryAsState()
     val scaffoldState = rememberScaffoldState()
@@ -23,12 +23,12 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
       scaffoldState = scaffoldState,
       topBar = {
         if (currentStack.value?.destination?.route == Nav.Main) {
-          TopAppBar(title = { Text("Demo app") })
+          TopAppBar(title = { Text(lang.title) })
         } else {
-          TopAppBar(title = { Text("Details") },
+          TopAppBar(title = { Text(lang.details) },
             navigationIcon = {
               IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Go back")
+                Icon(Icons.Filled.ArrowBack, contentDescription = lang.goBack)
               }
             })
         }
@@ -40,7 +40,7 @@ fun DemoApp(viewModel: DemoViewModel, navController: NavHostController = remembe
       }) {
       NavHost(navController = navController, startDestination = Nav.Main) {
         composable(Nav.Main) {
-          ConversationPage(viewModel.flow, navController) {
+          ConversationPage(viewModel, navController, lang.conversations) {
             scope.launch {
               scaffoldState.snackbarHostState.showSnackbar("An error occurred.", "OK")
             }
