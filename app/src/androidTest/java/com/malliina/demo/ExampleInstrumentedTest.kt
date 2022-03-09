@@ -28,10 +28,11 @@ class ExampleInstrumentedTest {
 
   @Test
   fun uiTest() {
+    val app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as DemoApp
     val lang = Lang.english
     composeTestRule.apply {
       setContent {
-        MainScreen(viewModel = DemoViewModel(), lang)
+        MainScreen(viewModel = DemoViewModel(app), lang)
       }
       onNodeWithText(lang.title).assertIsDisplayed()
 //      onNodeWithText(lang.conversations.demo).assertIsDisplayed()

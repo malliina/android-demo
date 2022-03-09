@@ -4,6 +4,7 @@ object Nav {
   const val Main = "main"
   const val Second = "detail"
   const val Message = "message"
+  const val List = "list"
   const val MessageParam = "messageId"
   const val MessageTemplate = "$Message/{$MessageParam}"
   fun message(id: String) = "$Message/$id"

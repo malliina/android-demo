@@ -14,6 +14,7 @@ class MainActivity : ComponentActivity() {
     Timber.i("onCreate")
     setContent {
       MainScreen(viewModel)
+//      ListScreen(viewModel)
     }
   }
 

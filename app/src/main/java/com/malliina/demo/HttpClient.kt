@@ -9,6 +9,7 @@ class HttpClient(private val http: OkHttpClient = OkHttpClient()) {
     val call = http.newCall(Request.Builder().url(url).build())
     call.enqueue(object : Callback {
       override fun onResponse(call: Call, response: Response) {
+        response.close()
         cont.resumeWith(Result.success(response))
       }
 
