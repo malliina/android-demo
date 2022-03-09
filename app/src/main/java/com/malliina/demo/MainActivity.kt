@@ -11,8 +11,6 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val tree = if (BuildConfig.DEBUG) Timber.DebugTree() else NoLogging()
-    Timber.plant(tree)
     Timber.i("onCreate")
     setContent {
       MainScreen(viewModel)
