@@ -1,10 +1,10 @@
 package com.malliina.demo
 
 object Nav {
-  val Main = "main"
-  val Second = "detail"
-  val Message = "message"
-  val MessageParam = "messageId"
-  val MessageTemplate = "$Message/{$MessageParam}"
+  const val Main = "main"
+  const val Second = "detail"
+  const val Message = "message"
+  const val MessageParam = "messageId"
+  const val MessageTemplate = "$Message/{$MessageParam}"
   fun message(id: String) = "$Message/$id"
 }

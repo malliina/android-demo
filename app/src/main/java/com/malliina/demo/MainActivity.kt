@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
     Timber.plant(tree)
     Timber.i("onCreate")
     setContent {
-      DemoApp(viewModel)
+      MainScreen(viewModel)
     }
   }
 

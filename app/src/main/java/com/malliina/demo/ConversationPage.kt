@@ -25,6 +25,7 @@ import androidx.paging.compose.itemsIndexed
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.malliina.demo.ui.theme.DemoAppTheme
+import okhttp3.Response
 
 @Composable
 fun ConversationPage(
@@ -34,9 +35,9 @@ fun ConversationPage(
   onError: () -> Unit
 ) {
   val lazyMessages = vm.flow.collectAsLazyPagingItems()
-  var message: Res<Message> by remember { mutableStateOf(Res.Loading) }
+  var message: Res<Response> by remember { mutableStateOf(Res.Loading) }
   LaunchedEffect("demo") {
-    message = Res.Success(vm.loadMessage(1))
+    message = Res.Success(vm.makeRequest())
   }
   // A surface container using the 'background' color from the theme
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
@@ -46,7 +47,7 @@ fun ConversationPage(
       }
       when (val m = message) {
         Res.Loading -> CircularProgressIndicator()
-        is Res.Success -> Text(lang.demo)
+        is Res.Success -> Text("Response: ${m.t.code}.")
         else -> {}
       }
       SwipeConversation(lazyMessages, navController)
