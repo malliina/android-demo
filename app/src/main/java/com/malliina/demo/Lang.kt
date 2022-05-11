@@ -1,5 +1,7 @@
 package com.malliina.demo
 
+import android.os.Build
+
 data class ConversationLang(val tap: String, val demo: String)
 
 data class Lang(
@@ -10,13 +12,14 @@ data class Lang(
   val conversations: ConversationLang
 ) {
   companion object {
+    val version = BuildConfig.VERSION_NAME
     val english =
       Lang(
         "Demo app",
         "Details",
         "List",
         "Go back",
-        ConversationLang("Tap or swipe to refresh 3", "Demo")
+        ConversationLang("Tap or swipe to refresh $version", "Demo")
       )
   }
 }
