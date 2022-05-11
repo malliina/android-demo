@@ -16,7 +16,7 @@ data class Lang(
         "Details",
         "List",
         "Go back",
-        ConversationLang("Tap or swipe to refresh", "Demo")
+        ConversationLang("Tap or swipe to refresh 3", "Demo")
       )
   }
 }

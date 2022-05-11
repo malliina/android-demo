@@ -37,6 +37,7 @@ fun MainScreen(
     val currentRoute = currentStack.value?.destination?.route
     Scaffold(
       scaffoldState = scaffoldState,
+      drawerContent = { Text("Drawer here") },
       topBar = {
         when (currentRoute) {
           Nav.Main -> {
